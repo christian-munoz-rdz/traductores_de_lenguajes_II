@@ -1,3 +1,6 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QPushButton, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QHBoxLayout
+
 def es_letra(c):
     return c.isalpha()
 
@@ -66,23 +69,56 @@ def obtener_tokens(codigo):
 
     return tokens_identificados
 
-codigo = """
-int funcion(int a, float b) {
-    int resultado = 0;
-    if (a == 0 || b > 0.0) {
-        resultado = a + 1;
-    } else {
-        while (b <= 10.5) {
-            resultado = resultado + a * b;
-            b = b - 1;
-        }
-    }
-    return resultado;
-} 
-$
-"""
+# Clase principal de la ventana de la aplicación
+class TokenizerWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+        
+    def initUI(self):
+        self.setWindowTitle('Analizador de Tokens')
+        self.setGeometry(100, 100, 800, 600)
+        
+        # Layout principal
+        layout = QHBoxLayout()
+        
+        # Área de texto para entrada de código
+        self.textEdit = QTextEdit()
+        layout.addWidget(self.textEdit)
+        
+        # Botón para analizar el texto
+        self.btnAnalyze = QPushButton('Analizar')
+        self.btnAnalyze.clicked.connect(self.analyzeText)
+        layout.addWidget(self.btnAnalyze)
+        
+        # Tabla para mostrar los tokens
+        self.tableWidget = QTableWidget()
+        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setHorizontalHeaderLabels(['Tipo de Token', 'Token', 'Número Asociado'])
+        layout.addWidget(self.tableWidget)
+        
+        # Widget contenedor y set layout
+        container = QWidget()
+        container.setLayout(layout)
+        self.setCentralWidget(container)
+        
+    def analyzeText(self):
+        codigo = self.textEdit.toPlainText()
+        tokens = obtener_tokens(codigo)
+        self.tableWidget.setRowCount(len(tokens))
+        
+        for i, token in enumerate(tokens):
+            self.tableWidget.setItem(i, 0, QTableWidgetItem(token[0]))
+            self.tableWidget.setItem(i, 1, QTableWidgetItem(token[1]))
+            self.tableWidget.setItem(i, 2, QTableWidgetItem(str(token[2])))
+        
+# Punto de entrada de la aplicación
+def main():
+    app = QApplication(sys.argv)
+    ex = TokenizerWindow()
+    ex.show()
+    sys.exit(app.exec_())
 
-tokens = obtener_tokens(codigo)
-for token in tokens:
-    print(token)
+if __name__ == '__main__':
+    main()
 
