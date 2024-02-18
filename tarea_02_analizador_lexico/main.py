@@ -9,10 +9,17 @@ def es_espacio(c):
 
 def obtener_tokens(codigo):
     tokens = {
-        ";": 2, ",": 3, "(": 4, ")": 5, "{": 6, "}": 7, "=": 8,
-        "if": 9, "while": 10, "return": 11, "else": 12, "+": 14, "-": 14,
-        "||": 15, "&&": 15, "*": 16, "/": 16, "==": 17, "<": 17, "<=": 17,
-        ">": 17, ">=": 17, "!=": 17, "$": 18
+        ";": ("Punto y coma", ";", 2), ",": ("Coma", ",", 3), "(": ("ParéntesisI", "(", 4), ")": ("ParéntesisD", ")", 5), 
+        "{": ("LlaveI", "{", 6), "}": ("LlaveD", "}", 7), "=": ("Asignación", "=", 8),
+        "if": ("Palabra Reservada", "if", 9), "while": ("Palabra Reservada", "while", 10), 
+        "return": ("Palabra Reservada", "return", 11), "else": ("Palabra Reservada", "else", 12), 
+        "+": ("Operador Suma", "+", 14), "-": ("Operador Suma", "-", 14),
+        "||": ("Operador Logico", "||", 15), "&&": ("Operador Logico", "&&", 15), 
+        "*": ("Operador Multiplicacion", "*", 16), "/": ("Operador Multiplicacion", "/", 16), 
+        "==": ("Operador Relacional", "==", 17), "<": ("Operador Relacional", "<", 17), 
+        "<=": ("Operador Relacional", "<=", 17), ">": ("Operador Relacional", ">", 17), 
+        ">=": ("Operador Relacional", ">=", 17), "!=": ("Operador Relacional", "!=", 17), 
+        "$": ("Fin de Archivo", "$", 18)
     }
     tipos_de_dato = ["int", "float", "char", "void"]
     
@@ -33,28 +40,28 @@ def obtener_tokens(codigo):
                 i += 1
             
             if temp in tipos_de_dato:
-                tokens_identificados.append((temp, 0))
+                tokens_identificados.append(("Tipo de Dato", temp, 0))
             elif temp in tokens:
-                tokens_identificados.append((temp, tokens[temp]))
+                tokens_identificados.append(tokens[temp])
             else:
-                tokens_identificados.append((temp, 1))
+                tokens_identificados.append(("Identificador", temp, 1))
         
         elif es_digito(codigo[i]) or (codigo[i] == '.' and i + 1 < longitud and es_digito(codigo[i + 1])):  # Inicio de constante numérica
             while i < longitud and (es_digito(codigo[i]) or codigo[i] == '.'):
                 temp += codigo[i]
                 i += 1
-            tokens_identificados.append((temp, 13))
+            tokens_identificados.append(("Constante", temp, 13))
         
         else:  # Otros caracteres (operadores, delimitadores)
             temp += codigo[i]
             if i + 1 < longitud:
                 temp_doble = temp + codigo[i + 1]
                 if temp_doble in tokens:  # Verificar operadores de dos caracteres
-                    tokens_identificados.append((temp_doble, tokens[temp_doble]))
+                    tokens_identificados.append(tokens[temp_doble])
                     i += 2
                     continue
             if temp in tokens:
-                tokens_identificados.append((temp, tokens[temp]))
+                tokens_identificados.append(tokens[temp])
             i += 1
 
     return tokens_identificados
