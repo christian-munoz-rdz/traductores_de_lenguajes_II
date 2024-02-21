@@ -77,7 +77,7 @@ class TokenizerWindow(QMainWindow):
         
     def initUI(self):
         self.setWindowTitle('Analizador de Tokens')
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(100, 100, 1200, 600)
         
         # Layout principal
         layout = QHBoxLayout()
@@ -96,6 +96,10 @@ class TokenizerWindow(QMainWindow):
         self.tableWidget.setColumnCount(3)
         self.tableWidget.setHorizontalHeaderLabels(['Tipo de Token', 'Token', 'Número Asociado'])
         layout.addWidget(self.tableWidget)
+
+        #Añadir text edit vacío a la derecha
+        self.textEdit2 = QTextEdit()
+        layout.addWidget(self.textEdit2)
         
         # Widget contenedor y set layout
         container = QWidget()
@@ -121,4 +125,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
